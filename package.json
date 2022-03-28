@@ -10,7 +10,6 @@
   "description": "lista de tarefas",
   "version": "1.0.0",
   "main": "index.js",
-  "devDependencies": {},
   "scripts": {
     "start": "nodemon index.js"
   },

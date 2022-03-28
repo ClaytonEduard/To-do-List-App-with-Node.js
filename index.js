@@ -14,13 +14,13 @@ dotenv.config()
 //definindo css
 app.use("/static", express.static("public"));
 
-app.use(express.urlencoded({extends:true}))
+app.use(express.urlencoded({ extends: true }))
 
 //conectando com o mongoose
 //mongoose.set("useFindAndModify", false)
 let DB_CONNECT = "mongodb+srv://Chaves:zmHhA0Fodrb0GUEJ@banco.lduww.mongodb.net/myFirstDatabase?retryWrites=true&w=majority"
 
-mongoose.connect(DB_CONNECT,{useNewUrlParser:true},()=>{
+mongoose.connect(DB_CONNECT, { useNewUrlParser: true }, () => {
     console.log('Conectado com o banco')
     // definindo o numero da porta do servidor local
     app.listen(8081, () => {
@@ -32,16 +32,19 @@ mongoose.connect(DB_CONNECT,{useNewUrlParser:true},()=>{
 app.set("view engine", "ejs")
 
 
-//rota
+//metodo get ou metodo ler
 app.get('/', (req, res) => {
-    res.render("todo.ejs")
+    TodoTask.find({}, (err, tasks) => {
+        res.render("todo.ejs", { todoTasks: tasks })
+    })
+
 })
 
 //metodo post onde salva o arquivo
-app.post('/',async(req,res)=>{
+app.post('/', async (req, res) => {
 
     const todoTask = new TodoTask({
-        content:req.body.content
+        content: req.body.content
     })
     try {
         await todoTask.save();
@@ -49,5 +52,29 @@ app.post('/',async(req,res)=>{
     } catch (error) {
         res.redirect('/')
     }
-  
+
 })
+
+//metodo editar
+app.route('/edit/:id').get((req, res) => {
+    const id = req.params.id;
+    TodoTask.find({}, (err, tasks) => {
+        res.render("todoEdit.ejs", { todoTasks: tasks, idTask: id });
+    })
+}).post((req, res) => {
+    const id = req.params.id;
+    TodoTask.findByIdAndUpdate(id, { content: req.body.content }, err => {
+        if (err) return res.send(500, err);
+        res.redirect("/");
+    });
+});
+
+
+// metodo deletar
+app.route("/remove/:id").get((req, res) => {
+    const id = req.params.id;
+    TodoTask.findByIdAndRemove(id, err => {
+        if (err) return res.send(500, err);
+        res.redirect("/");
+    });
+});

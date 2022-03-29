@@ -21,9 +21,10 @@ app.use(express.urlencoded({ extends: true }))
 mongoose.connect(process.env.DB_CONNECT, { useNewUrlParser: true }, () => {
     console.log('Conectado com o banco')
     // definindo o numero da porta do servidor local
-    app.listen(8081, () => {
+    app.listen(process.env.PORT || 3000, () => {
         console.log('Servidor funcionando!')
     })
+    
 })
 
 // configuração da views

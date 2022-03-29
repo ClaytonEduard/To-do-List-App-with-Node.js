@@ -10,7 +10,6 @@ const dotenv = require('dotenv')
 const TodoTask = require('./models/TodoTask')
 
 dotenv.config()
-
 //definindo css
 app.use("/static", express.static("public"));
 
@@ -18,9 +17,8 @@ app.use(express.urlencoded({ extends: true }))
 
 //conectando com o mongoose
 //mongoose.set("useFindAndModify", false)
-let DB_CONNECT = "mongodb+srv://Chaves:zmHhA0Fodrb0GUEJ@banco.lduww.mongodb.net/myFirstDatabase?retryWrites=true&w=majority"
 
-mongoose.connect(DB_CONNECT, { useNewUrlParser: true }, () => {
+mongoose.connect(process.env.DB_CONNECT, { useNewUrlParser: true }, () => {
     console.log('Conectado com o banco')
     // definindo o numero da porta do servidor local
     app.listen(8081, () => {
